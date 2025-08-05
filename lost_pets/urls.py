@@ -3,7 +3,7 @@ from .views import LostAnimalListView, LostAnimalDetailView, LostAnimalCreateVie
 
 app_name = 'lost_pets'
 urlpatterns = [
-    path('',      LostAnimalListView.as_view(),    name='list'),
+    path('',        LostAnimalListView.as_view(),   name='list'),
     path('create/', LostAnimalCreateView.as_view(), name='create'),
     path('<int:pk>/', LostAnimalDetailView.as_view(), name='detail'),
 ]

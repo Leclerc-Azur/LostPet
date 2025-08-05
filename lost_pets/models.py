@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
+GENDER_CHOICES = [
+    ('male', 'Самец'),
+    ('female', 'Самка'),
+    ('unknown', 'Неизвестно'),
+]
 User = get_user_model()
 
 class City(models.Model):
@@ -99,7 +103,14 @@ class LostAnimal(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Активно')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
-
+#части которые добавила
+    date_lost = models.DateField(verbose_name='Дата пропажи', null=True, blank=True)
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHOICES,
+        default='unknown',
+        verbose_name='Пол'
+    )
     class Meta:
         verbose_name = 'Пропавшее животное'
         verbose_name_plural = 'Пропавшие животные'
@@ -119,8 +130,15 @@ class LostAnimalImage(models.Model):
         upload_to='media/lost_animals/images',
         verbose_name='Фотография'
     )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+        blank=True,
+        verbose_name='Дата добавления'
+    )
 
     class Meta:
+        ordering = ['-created_at']
         verbose_name = 'Фотография пропавшего животного'
         verbose_name_plural = 'Фотографии пропавших животных'
 
