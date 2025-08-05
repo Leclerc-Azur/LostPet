@@ -1,0 +1,92 @@
+{% load static %}
+{% block part %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+{% endblock %}
+
+{% block bar %}
+{% endblock %}
+
+{% block menu %}
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="templatemo">
+    <!--
+    Medigo Template
+    http://www.templatemo.com/preview/templatemo_460_medigo
+    -->
+
+    <!-- Google Fonts -->
+    <link href="http://fonts.googleapis.com/css?family=PT+Serif:400,700,400italic,700itali" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Raleway:400,900,800,700,500,200,100,600" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/misc.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/blue-scheme.css' %}">
+
+    <!-- JavaScripts -->
+    <script src="{% static 'assets/js/jquery-1.10.2.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-migrate-1.2.1.min.js' %}"></script>
+
+    <link rel="shortcut icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
+</head>
+<body>
+    <div class="responsive_menu">
+        <ul class="main_menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">Portfolio</a>
+                <ul>
+                    <li><a href="portfolio.html">Portfolio Grid</a></li>
+                    <li><a href="project-image.html">Project Image</a></li>
+                    <li><a href="project-slideshow.html">Project Slideshow</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Blog</a>
+                <ul>
+                    <li><a href="blog.html">Blog Standard</a></li>
+                    <li><a href="blog-single.html">Blog Single</a></li>
+                    <li><a href="#">visit templatemo</a></li>
+                </ul>
+            </li>
+            <li><a href="archives.html">Archives</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div> <!-- /.responsive_menu -->
+{% endblock %}
+
+{% block site-footer %}
+
+	<footer class="site-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<nav class="footer-nav clearfix">
+						<ul class="footer-menu">
+							<li><a href="index.html">Home</a></li>
+							<li><a href="portfolio.html">Portfolio</a></li>
+							<li><a href="blog.html">Blog Posts</a></li>
+							<li><a href="archives.html">Shortcodes</a></li>
+							<li><a href="contact.html">Contact</a></li>
+						</ul> <!-- /.footer-menu -->
+					</nav> <!-- /.footer-nav -->
+				</div> <!-- /.col-md-12 -->
+			</div> <!-- /.row -->
+			<div class="row">
+				<div class="col-md-12">
+					<p class="copyright-text">Copyright &copy; 2084 Company Name</p>
+				</div> <!-- /.col-md-12 -->
+			</div> <!-- /.row -->
+		</div> <!-- /.container -->
+	</footer> <!-- /.site-footer -->
+
+	<!-- Scripts -->
+	<script src="{% static 'assets/js/min/plugins.min.js' %}"></script>
+	<script src="{% static 'assets/js/min/medigo-custom.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+{% endblock %}

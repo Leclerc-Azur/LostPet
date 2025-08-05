@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+from django.shortcuts import render
+
 
 from .models import LostAnimal
 from .forms import LostAnimalForm
@@ -34,3 +36,6 @@ class LostAnimalCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+def contact(request):
+    return render(request, 'lost_pets/contact.html')
