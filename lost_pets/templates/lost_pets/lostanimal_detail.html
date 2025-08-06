@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ animal.title }}{% endblock %}
+
+{% block content %}
+  <div class="animal-detail">
+    <h1 class="mb-3">{{ animal.title }}</h1>
+
+    <p><strong>Категория:</strong> {{ animal.category.title }}</p>
+    <p><strong>Пол:</strong> {{ animal.get_gender_display }}</p>
+    <p><strong>Дата пропажи:</strong> {{ animal.date_lost }}</p>
+    <p><strong>Город:</strong> {{ animal.city.title }}, {{ animal.district.title }}</p>
+    <p>{{ animal.description }}</p>
+
+    {% if animal.cover %}
+      <img src="{{ animal.cover.url }}" class="img-fluid mb-3" alt="{{ animal.title }}">
+    {% endif %}
+
+    {% if animal.images.all %}
+      <h4>Дополнительные фото</h4>
+      <div class="row">
+        {% for img in animal.images.all %}
+          <div class="col-md-3 mb-2">
+            <a href="{{ img.image.url }}" target="_blank">
+              <img src="{{ img.image.url }}" class="img-thumbnail" alt="Фото {{ animal.title }}">
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <a href="{% url 'lost_pets:list' %}" class="btn btn-secondary mt-3">← Назад к списку</a>
+  </div>
+{% endblock %}

@@ -8,10 +8,10 @@ class RegisterView(CreateView):
     model = MyUser
     form_class = UserRegistrationForm
     template_name = 'users/register.html'
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy('users:two_factor_settings')
 
 class LoginView(AuthLoginView):
-    template_name = 'users/login.html'
+    template_name = 'users/two_factor_settings.html'
 
 class LogoutView(AuthLogoutView):
-    next_page = reverse_lazy('users:login')
+    next_page = reverse_lazy('users:two_factor_settings')

@@ -1,0 +1,15 @@
+
+{% load static %}
+
+
+<div class="container" style="max-width: 500px; margin-top: 50px;">
+  <h2>Настройки безопасности</h2>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="form-check mb-3">
+      {{ form.is_2fa_enabled }}
+      {{ form.is_2fa_enabled.label_tag }}
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
