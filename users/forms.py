@@ -59,3 +59,27 @@ class ProfileSettingsForm(forms.ModelForm):
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'zip': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+class OTPVerifyForm(forms.Form):
+    code = forms.CharField(
+        label="Код подтверждения из письма",
+        max_length=6,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+        required=True
+    )
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите email'
+        })
+    )
+    password = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите пароль'
+        })
+    )

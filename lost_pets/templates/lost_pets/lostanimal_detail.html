@@ -29,7 +29,7 @@
                 <h5>Описание:</h5>
                 <p>{{ animal.description }}</p>
             </div>
-            {% if request.user == animal.user %}
+            {% if request.user == animal.user or request.user.role == "manager" %}
                 <div class="mt-4">
                     <a href="{% url 'lost_pets:lostanimal_edit' animal.pk %}" class="btn btn-warning mr-2">Редактировать</a>
                     <a href="{% url 'lost_pets:lostanimal_delete' animal.pk %}" class="btn btn-danger">Удалить</a>

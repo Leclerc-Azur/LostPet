@@ -1,19 +1,45 @@
 
 {% load static %}
-
-  <h2>Войти на сайт</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div>
-      <label for="id_username">почта</label>
-      {{ form.username }}
-      {{ form.username.errors }}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Войти на сайт</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+    <style>
+        body { background: #f5f6fa; }
+        .card { border-radius: 12px; box-shadow: 0 1px 6px rgba(60,72,88,.10);}
+    </style>
+</head>
+<body>
+  <div class="container mt-5" style="max-width: 410px;">
+    <div class="card p-4">
+      <h3 class="mb-4 text-center">Войти на сайт</h3>
+      <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
+        <div class="mb-3">
+          {{ form.email.label_tag }}
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+        <div class="mb-3">
+          {{ form.password.label_tag }}
+          {{ form.password }}
+          {{ form.password.errors }}
+        </div>
+        <button type="submit" class="btn btn-success w-100">Войти</button>
+      </form>
+      <div class="text-center mt-3">
+        <a href="{% url 'users:register' %}">Регистрация</a>
+      </div>
     </div>
-    <div>
-      <label for="id_password">Пароль</label>
-      {{ form.password }}
-      {{ form.password.errors }}
-    </div>
-    <button type="submit">Войти</button>
-  </form>
+  </div>
+</body>
+</html>

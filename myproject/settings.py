@@ -64,6 +64,15 @@ LOGOUT_REDIRECT_URL = 'lost_pets:index'
 
 ROOT_URLCONF = 'myproject.urls'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'            # или другой SMTP-сервер (например, mail.ru, yandex)
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kubkubovich5@gmail.com'   # укажи свой рабочий email
+EMAIL_HOST_PASSWORD = 'yhsr wuor jayu kdwn' # укажи пароль приложения (а не обычный от Google!)
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

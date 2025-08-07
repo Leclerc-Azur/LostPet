@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Подтвердите вход</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+</head>
+<body style="background: #f5f6fa;">
+<div class="container mt-5" style="max-width: 410px;">
+    <div class="card p-4 shadow">
+        <h4 class="mb-3">Двухфакторная аутентификация</h4>
+        <p>На ваш email отправлен код: <b>{{ email }}</b></p>
+        <form method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger">{{ form.errors.code }}</div>
+            {% endif %}
+            <div class="mb-3">
+                {{ form.code.label_tag }}
+                {{ form.code }}
+            </div>
+            <button type="submit" class="btn btn-success w-100">Подтвердить</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

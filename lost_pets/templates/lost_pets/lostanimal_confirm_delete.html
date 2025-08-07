@@ -4,6 +4,6 @@
   <form method="post">
     {% csrf_token %}
     <button type="submit">Подтвердить удаление</button>
-    <a href="{% url 'lost_pets:lostanimal_detail' object.pk %}">Отмена</a>
+    <a href="{% url 'lost_pets:detail' object.pk %}">Отмена</a>
   </form>
 {% endblock %}

@@ -77,7 +77,13 @@ class LoadCitiesView(View):
 class UserIsAuthorMixin(UserPassesTestMixin):
     def test_func(self):
         obj = self.get_object()
-        return obj.user == self.request.user
+        user = self.request.user
+
+        # Если менеджер — разрешить удалять всё
+        if hasattr(user, "role") and user.role == "manager":
+            return True
+        # Иначе только автор
+        return obj.user == user
 
 class LostAnimalUpdateView(LoginRequiredMixin, UserIsAuthorMixin, UpdateView):
     model = LostAnimal
