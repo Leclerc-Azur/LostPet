@@ -23,13 +23,11 @@ class MyUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, email, password=None, **extra_fields):
-        """Создание суперпользователя (администратора)."""
         extra_fields.setdefault('is_admin', True)
         extra_fields.setdefault('role', UserRole.MANAGER)
         return self.create_user(username, email, password, **extra_fields)
 
 class MyUser(AbstractBaseUser):
-    """Кастомная модель пользователя."""
     username = models.CharField(max_length=222, verbose_name='Имя пользователя')
     email = models.EmailField(unique=True, verbose_name='Адрес электронной почты')
     avatar = models.ImageField(
@@ -49,6 +47,25 @@ class MyUser(AbstractBaseUser):
     is_2fa_enabled = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
+    # ДОПОЛНИТЕЛЬНЫЕ ПОЛЯ:
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    birthday = models.DateField(null=True, blank=True)
+    gender = models.CharField(
+        max_length=10,
+        choices=[
+            ('male', 'Мужской'),
+            ('female', 'Женский'),
+            ('other', 'Другое')
+        ],
+        blank=True
+    )
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.CharField(max_length=255, blank=True)
+    number = models.CharField(max_length=20, blank=True)
+    city = models.CharField(max_length=50, blank=True)
+    zip = models.CharField(max_length=20, blank=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
@@ -58,7 +75,6 @@ class MyUser(AbstractBaseUser):
         return self.email
 
     def has_perm(self, perm, obj=None):
-        """Простейшая проверка наличия прав."""
         return True
 
     def has_module_perms(self, app_label):
@@ -66,7 +82,6 @@ class MyUser(AbstractBaseUser):
 
     @property
     def is_staff(self):
-        """Админ может входить в админ‑панель."""
         return self.is_admin
 
 class OTP(models.Model):
@@ -74,3 +89,6 @@ class OTP(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"OTP for {self.user.email}: {self.code}"

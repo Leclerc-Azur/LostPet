@@ -17,63 +17,82 @@
 {% block content %}
     {{ block.super }}
 
-    <header class="site-header clearfix">
-		<div class="container">
+<header class="site-header clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
 
-			<div class="row">
+                <!-- Логотип -->
+                <div class="pull-left logo">
+                    <a href="{% url 'lost_pets:index' %}">
+                        <img src="{% static 'assets/images/logo.png' %}" alt="Logo">
+                    </a>
+                </div>
 
-				<div class="col-md-12">
+                <!-- Главное меню -->
+                <div class="main-navigation pull-right">
+                    <nav class="main-nav visible-md visible-lg">
+                        <ul class="sf-menu">
+                            <li class="active">
+                                <a href="{% url 'lost_pets:index' %}">Главная страница</a>
+                            </li>
+                            <li>
+                                <li><a href="{% url 'lost_pets:search' %}">Искать питомца</a></li>
 
-					<div class="pull-left logo">
-						<a href="index.html">
-							<img src="{% static 'assets/images/logo.png' %}" alt="Medigo by templatemo">
-						</a>
-					</div>	<!-- /.logo -->
 
-					<div class="main-navigation pull-right">
 
-						<nav class="main-nav visible-md visible-lg">
-							<ul class="sf-menu">
-								<li class="active"><a href="index.html">Home</a></li>
-					            <li><a href="#">Portfolio</a>
-					            	<ul>
-					            		<li><a href="portfolio.html">Portfolio Grid</a></li>
-					            		<li><a href="project-image.html">Project Image</a></li>
-					            		<li><a href="project-slideshow.html">Project Slideshow</a></li>
-					            	</ul>
-					            </li>
-					            <li><a href="#">Blog</a>
-									<ul>
-										<li><a href="blog.html">Blog Standard</a></li>
-										<li><a href="blog-single.html">Blog Single</a></li>
-                                        <li><a href="#">visit templatemo</a></li>
-									</ul>
-					            </li>
-					            {% if user.is_authenticated %}
-								    <li><a href="{% url 'users:logout' %}">Выйти</a></li>
-								{% else %}
-								    <li><a href="{% url 'users:login' %}">Войти</a></li>
-								{% endif %}
-								<li><a href="{% url 'users:register' %}">Регистрация</a></li>
-					            <li><a href="contact.html">Contact</a></li>
-							</ul> <!-- /.sf-menu -->
-						</nav> <!-- /.main-nav -->
 
-						<!-- This one in here is responsive menu for tablet and mobiles -->
-					    <div class="responsive-navigation visible-sm visible-xs">
-					        <a href="#nogo" class="menu-toggle-btn">
-					            <i class="fa fa-bars"></i>
-					        </a>
-					    </div> <!-- /responsive_navigation -->
 
-					</div> <!-- /.main-navigation -->
 
-				</div> <!-- /.col-md-12 -->
+                            <li>
+                                <a href="{% url 'lost_pets:profile' %}">Профиль</a>
 
-			</div> <!-- /.row -->
 
-		</div> <!-- /.container -->
-	</header> <!-- /.site-header -->
+
+
+
+
+
+                            {% if user.is_authenticated %}
+                                <li>
+                                    <a href="{% url 'users:logout' %}">Выйти</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{% url 'users:login' %}">Войти</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'users:register' %}">Регистрация</a>
+                                </li>
+                            {% endif %}
+
+                            <li>
+                                <li><a href="{% url 'lost_pets:create' %}">Создать объявление</a></li>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <!-- Мобильное меню -->
+                    <div class="responsive-navigation visible-sm visible-xs">
+                        <a href="#nogo" class="menu-toggle-btn">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+	{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success" id="donate-thank-you" style="margin: 20px 0;">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+</header>
+
 
 	<section id="homeIntro" class="parallax first-widget">
 	    <div class="parallax-overlay">
@@ -82,7 +101,9 @@
 		        	<div class="col-md-12">
 		        		<h2>Choose the Optimal Workspace for Your Business</h2>
 		        		<p>We asked six entrepreneurs with drastically different office strategies for their advice on<br> choosing a workspace. </p>
-		        		<a href="#" class="large-button white-color">Download Free <i class="icon-button fa fa-download"></i></a>
+		        		<a href="{% url 'lost_pets:donate' %}" class="large-button white-color">
+							Пожертвовать <i class="fa fa-heart"></i>
+						</a>
 		        	</div> <!-- /.col-md-12 -->
 		        </div> <!-- /.row -->
 		    </div> <!-- /.container -->
@@ -463,6 +484,17 @@
 		    </div> <!-- /.container -->
 	    </div> <!-- /.parallax-overlay -->
 	</section> <!-- /#blogPosts -->
+  <script>
+    setTimeout(function() {
+      var el = document.getElementById('donate-thank-you');
+      if(el) {
+        el.style.transition = "opacity 0.5s";
+        el.style.opacity = 0;
+        setTimeout(function(){ el.style.display = 'none'; }, 500);
+      }
+    }, 5000);
+  </script>
+</body>
 
 
 
@@ -470,6 +502,19 @@
     <script src="{% static 'assets/js/min/plugins.min.js' %}"></script>
     <script src="{% static 'assets/js/min/medigo-custom.min.js' %}"></script>
 </body>
+
+
+
+<script>
+  setTimeout(function() {
+    var el = document.getElementById('donate-thank-you');
+    if(el) {
+      el.style.transition = "opacity 0.5s";
+      el.style.opacity = 0;
+      setTimeout(function(){ el.style.display = 'none'; }, 500);
+    }
+  }, 5000);
+</script>
 </html>
 
 {% endblock %}

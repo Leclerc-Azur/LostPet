@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Создать объявление</title>
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/misc.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/blue-scheme.css' %}">
+  <!-- jQuery должен быть здесь, до нашего скрипта -->
+  <script src="{% static 'assets/js/jquery-1.10.2.min.js' %}"></script>
+</head>
+<body>
+
+  <div class="container" style="max-width:600px; margin:40px auto;">
+    <h2>Создать объявление</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- Остальные поля формы -->
+      <div class="form-group">
+        {{ form.title.label_tag }}
+        {{ form.title }}
+        {{ form.title.errors }}
+      </div>
+      <div class="form-group">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+        {{ form.category.errors }}
+      </div>
+      <div class="form-group">
+        {{ form.phone.label_tag }}
+        {{ form.phone }}
+        {{ form.phone.errors }}
+      </div>
+      <div class="form-group">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {{ form.description.errors }}
+      </div>
+      <div class="form-group">
+        {{ form.cover.label_tag }}
+        {{ form.cover }}
+        {{ form.cover.errors }}
+      </div>
+
+      <!-- Поле Область -->
+      <div class="form-group">
+        {{ form.area.label_tag }}
+        {{ form.area }}
+        {{ form.area.errors }}
+      </div>
+
+      <!-- Поле Город (изначально пустое) -->
+      <div class="form-group">
+        {{ form.city.label_tag }}
+        {{ form.city }}
+        {{ form.city.errors }}
+      </div>
+
+      <!-- Остальные поля -->
+      <div class="form-group">
+        {{ form.address.label_tag }}
+        {{ form.address }}
+        {{ form.address.errors }}
+      </div>
+      <div class="form-group">
+        {{ form.date_lost.label_tag }}
+        {{ form.date_lost }}
+        {{ form.date_lost.errors }}
+      </div>
+      <div class="form-group">
+        {{ form.gender.label_tag }}
+        {{ form.gender }}
+        {{ form.gender.errors }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Опубликовать</button>
+    </form>
+  </div>
+
+  <!-- наш AJAX-скрипт -->
+  <script>
+    (function($) {
+      $('#id_area').on('change', function() {
+        var areaId = $(this).val();
+        var citySelect = $('#id_city');
+        citySelect.html('<option>Загрузка...</option>');
+        $.ajax({
+          url: "{% url 'lost_pets:ajax_load_cities' %}",
+          data: { area_id: areaId },
+          success: function(data) {
+            var opts = '<option value="">— выберите город —</option>';
+            $.each(data.cities, function(i, c) {
+              opts += '<option value="' + c.id + '">' + c.name + '</option>';
+            });
+            citySelect.html(opts);
+          }
+        });
+      });
+    })(jQuery);
+  </script>
+
+</body>
+</html>

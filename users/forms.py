@@ -3,12 +3,23 @@ from .models import MyUser
 
 class UserRegistrationForm(forms.ModelForm):
     """Форма регистрации пользователя с подтверждением пароля."""
-    password = forms.CharField(widget=forms.PasswordInput(), label='Пароль')
-    password_confirm = forms.CharField(widget=forms.PasswordInput(), label='Подтверждение пароля')
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label='Пароль'
+    )
+    password_confirm = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label='Подтверждение пароля'
+    )
 
     class Meta:
         model = MyUser
         fields = ['username', 'email', 'avatar']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'avatar': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
     def clean(self):
         cleaned_data = super().clean()
@@ -24,3 +35,27 @@ class UserRegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class ProfileSettingsForm(forms.ModelForm):
+    """Форма для редактирования профиля пользователя."""
+    class Meta:
+        model = MyUser
+        fields = [
+            'username', 'email', 'avatar',
+            'first_name', 'last_name', 'birthday', 'gender',
+            'phone', 'address', 'number', 'city', 'zip'
+        ]
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'avatar': forms.FileInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'number': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'zip': forms.TextInput(attrs={'class': 'form-control'}),
+        }

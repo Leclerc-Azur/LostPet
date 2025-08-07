@@ -58,9 +58,9 @@ MIDDLEWARE = [
 ]
 
 # URL’ы входа/выхода
-LOGIN_URL = 'two_factor:login'
+LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'lost_pets:index'
-LOGOUT_REDIRECT_URL = 'users:login'
+LOGOUT_REDIRECT_URL = 'lost_pets:index'
 
 ROOT_URLCONF = 'myproject.urls'
 

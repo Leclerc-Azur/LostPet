@@ -1,36 +1,38 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+
 GENDER_CHOICES = [
     ('male', 'Самец'),
     ('female', 'Самка'),
     ('unknown', 'Неизвестно'),
 ]
+
 User = get_user_model()
 
 class City(models.Model):
-    """Город, в котором пропало животное."""
-    title = models.CharField(max_length=255, verbose_name='Город')
+    """Область, в которой пропало животное."""
+    title = models.CharField(max_length=255, verbose_name='Область')
 
     class Meta:
-        verbose_name = 'Город'
-        verbose_name_plural = 'Города'
+        verbose_name = 'Область'
+        verbose_name_plural = 'Области'
 
     def __str__(self):
         return self.title
 
 class District(models.Model):
-    """Район, привязанный к конкретному городу."""
+    """Город (раньше район) в указанной области."""
     city = models.ForeignKey(
         City,
         on_delete=models.PROTECT,
         related_name='districts',
-        verbose_name='Город'
+        verbose_name='Область'
     )
-    title = models.CharField(max_length=255, verbose_name='Название района')
+    title = models.CharField(max_length=255, verbose_name='Город')
 
     class Meta:
-        verbose_name = 'Район'
-        verbose_name_plural = 'Районы'
+        verbose_name = 'Город'
+        verbose_name_plural = 'Города'
 
     def __str__(self):
         return f'{self.city}: {self.title}'
@@ -86,13 +88,13 @@ class LostAnimal(models.Model):
         City,
         on_delete=models.PROTECT,
         related_name='lost_animals',
-        verbose_name='Город'
+        verbose_name='Область'
     )
     district = models.ForeignKey(
         District,
         on_delete=models.PROTECT,
         related_name='lost_animals',
-        verbose_name='Район'
+        verbose_name='Город'
     )
     address = models.CharField(
         max_length=255,
@@ -100,10 +102,6 @@ class LostAnimal(models.Model):
         null=True,
         verbose_name='Адрес/ориентир'
     )
-    is_active = models.BooleanField(default=True, verbose_name='Активно')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
-#части которые добавила
     date_lost = models.DateField(verbose_name='Дата пропажи', null=True, blank=True)
     gender = models.CharField(
         max_length=10,
@@ -111,6 +109,10 @@ class LostAnimal(models.Model):
         default='unknown',
         verbose_name='Пол'
     )
+    is_active = models.BooleanField(default=True, verbose_name='Активно')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+
     class Meta:
         verbose_name = 'Пропавшее животное'
         verbose_name_plural = 'Пропавшие животные'

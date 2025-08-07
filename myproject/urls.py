@@ -5,15 +5,19 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # ---------------------------
-    # ТОЛЬКО users — без two_factor
-    path('accounts/', include('users.urls')),
-    # ---------------------------
-    path('', include('lost_pets.urls', namespace='lost_pets')),
+
+
+    path('accounts/', include(('users.urls', 'users'), namespace='users')),
+
+    path('', include(('lost_pets.urls', 'lost_pets'), namespace='lost_pets')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(
         settings.STATIC_URL,
         document_root=settings.STATICFILES_DIRS[0],
+    )
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT,
     )

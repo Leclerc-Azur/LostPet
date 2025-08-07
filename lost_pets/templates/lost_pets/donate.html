@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Пожертвовать</title>
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+  <style>
+    body {
+      background: #f7f7f9;
+    }
+    .donate-box {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px #0001;
+      padding: 32px 32px 24px 32px;
+      max-width: 420px;
+      margin: 48px auto 0 auto;
+    }
+    .donate-box label {
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #222;
+    }
+    .donate-box input[type="text"],
+    .donate-box input[type="number"] {
+      height: 44px;
+      font-size: 1rem;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+    .custom-switch {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 0.97rem;
+    }
+    .custom-switch input {
+      margin-right: 8px;
+    }
+    .donate-btn {
+      width: 100%;
+      padding: 13px 0;
+      font-size: 1.09rem;
+      border-radius: 6px;
+      font-weight: 500;
+      letter-spacing: .03em;
+    }
+    .donate-summary {
+      margin-top: 32px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 18px #0001;
+      padding: 22px 28px;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 1.07rem;
+    }
+    .order-title {
+      font-weight: bold;
+      font-size: 1.13rem;
+    }
+    .order-total {
+      color: #0970f4;
+      font-size: 1.15rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="donate-box">
+    <h3 class="mb-4" style="font-weight:600;">Платёж</h3>
+    <form method="post">
+      {% csrf_token %}
+      <!-- Переключатель сохранения карты -->
+      <div class="custom-switch">
+        <input type="checkbox" id="save_card" name="save_card">
+        <label for="save_card" style="margin:0;cursor:pointer;">
+          Согласен на безопасное хранение карты для будущих платежей
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="card_name">Имя владельца карты</label>
+        <input type="text" class="form-control" id="card_name" name="card_name" placeholder="Имя владельца карты" required>
+      </div>
+      <div class="form-group">
+        <label for="card_number">Номер карты</label>
+        <input type="text" class="form-control" id="card_number" name="card_number" maxlength="19" pattern="[0-9 ]{16,19}" placeholder="0000 0000 0000 0000" required>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <label for="expiry">Срок действия</label>
+          <input type="text" class="form-control" id="expiry" name="expiry" maxlength="5" pattern="[0-9]{2}/[0-9]{2}" placeholder="MM/ГГ" required>
+        </div>
+        <div class="col">
+          <label for="cvv">CVV</label>
+          <input type="text" class="form-control" id="cvv" name="cvv" maxlength="4" pattern="[0-9]{3,4}" placeholder="CVV" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary donate-btn mt-4">
+        <span class="fa fa-lock"></span> Оплатить
+      </button>
+      <div class="text-center mt-3">
+        <a href="#" onclick="window.history.back();return false;">Назад</a>
+      </div>
+    </form>
+  </div>
