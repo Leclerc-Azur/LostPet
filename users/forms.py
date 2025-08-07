@@ -1,6 +1,9 @@
 from django import forms
 from .models import MyUser
 
+from django import forms
+from .models import MyUser
+
 class UserRegistrationForm(forms.ModelForm):
     """Форма регистрации пользователя с подтверждением пароля."""
     password = forms.CharField(
@@ -21,6 +24,12 @@ class UserRegistrationForm(forms.ModelForm):
             'avatar': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and MyUser.objects.filter(email=email).exists():
+            raise forms.ValidationError('Пользователь с таким адресом электронной почты уже существует.')
+        return email
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
@@ -35,6 +44,7 @@ class UserRegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
 
 class ProfileSettingsForm(forms.ModelForm):
     """Форма для редактирования профиля пользователя."""

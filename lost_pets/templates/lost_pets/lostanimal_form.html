@@ -1,24 +1,85 @@
+
+lostanimal_form ```
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <title>Создать объявление</title>
+
   <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
   <link rel="stylesheet" href="{% static 'assets/css/misc.css' %}">
   <link rel="stylesheet" href="{% static 'assets/css/blue-scheme.css' %}">
-  <!-- jQuery должен быть здесь, до нашего скрипта -->
   <script src="{% static 'assets/js/jquery-1.10.2.min.js' %}"></script>
-</head>
-<body>
 
-  <div class="container" style="max-width:600px; margin:40px auto;">
-    <h2>Создать объявление</h2>
+  <style>
+    body {
+      background: #fefefe url("{% static 'assets/img/cat-paws-bg.png' %}") repeat;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .create-announcement-box {
+      max-width: 650px;
+      margin: 60px auto;
+      background-color: #fffdfa;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .create-announcement-box h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button[type="submit"] {
+      background-color: #2980b9;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #21618c;
+    }
+
+    .errorlist {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container create-announcement-box">
+    <h2>🆘 Новое объявление о пропаже</h2>
+
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <!-- Остальные поля формы -->
       <div class="form-group">
         {{ form.title.label_tag }}
         {{ form.title }}
@@ -44,22 +105,16 @@
         {{ form.cover }}
         {{ form.cover.errors }}
       </div>
-
-      <!-- Поле Область -->
       <div class="form-group">
         {{ form.area.label_tag }}
         {{ form.area }}
         {{ form.area.errors }}
       </div>
-
-      <!-- Поле Город (изначально пустое) -->
       <div class="form-group">
         {{ form.city.label_tag }}
         {{ form.city }}
         {{ form.city.errors }}
       </div>
-
-      <!-- Остальные поля -->
       <div class="form-group">
         {{ form.address.label_tag }}
         {{ form.address }}
@@ -76,11 +131,10 @@
         {{ form.gender.errors }}
       </div>
 
-      <button type="submit" class="btn btn-primary">Опубликовать</button>
+      <button type="submit">🐾 Опубликовать</button>
     </form>
   </div>
 
-  <!-- наш AJAX-скрипт -->
   <script>
     (function($) {
       $('#id_area').on('change', function() {
@@ -101,6 +155,150 @@
       });
     })(jQuery);
   </script>
-
 </body>
 </html>
+```
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Искать питомца</title>
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/misc.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/blue-scheme.css' %}">
+  <script src="{% static 'assets/js/jquery-1.10.2.min.js' %}"></script>
+
+  <style>
+    body {
+      background: #fefefe url("{% static 'assets/img/cat-paws-bg.png' %}") repeat;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container h2 {
+      text-align: center;
+      margin: 40px 0 30px;
+      color: #2c3e50;
+    }
+
+    .form-inline .form-group {
+      margin: 10px 10px 10px 0;
+    }
+
+    .form-control {
+      min-width: 160px;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    button.btn {
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 15px;
+    }
+
+    .btn-primary {
+      background-color: #3498db;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-default {
+      background-color: #eaeaea;
+      color: #333;
+    }
+
+    .list-group-item {
+      margin-bottom: 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .list-group-item:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-decoration: none;
+    }
+
+    .list-group-item h4 {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .pagination > li > a, .pagination > li > span {
+      border-radius: 6px;
+      margin: 0 3px;
+      color: #3498db;
+    }
+
+    .pagination > .active > a {
+      background-color: #3498db;
+      border-color: #3498db;
+      color: white;
+    }
+
+    footer.site-footer {
+      background: none;
+      box-shadow: none;
+    }
+
+    @media (max-width: 768px) {
+      .form-inline {
+        display: block;
+      }
+
+      .form-inline .form-group,
+      .form-inline button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header clearfix">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Логотип -->
+          <div class="pull-left logo">
+            <a href="{% url 'lost_pets:index' %}">
+              <img src="{% static 'assets/images/logo.png' %}" alt="Logo">
+            </a>
+          </div>
+          <!-- Навигация -->
+          <div class="main-navigation pull-right">
+            <nav class="main-nav visible-md visible-lg">
+              <ul class="sf-menu">
+                <li><a href="{% url 'lost_pets:index' %}">Главная</a></li>
+                {% if user.is_authenticated %}
+                  <li><a href="{% url 'users:logout' %}">Выйти</a></li>
+                {% else %}
+                  <li><a href="{% url 'users:login' %}">Войти</a></li>
+                  <li><a href="{% url 'users:register' %}">Регистрация</a></li>
+                {% endif %}
+                <li class="active"><a href="{% url 'lost_pets:search' %}">Искать питомца</a></li>
+                <li><a href="{% url 'lost_pets:create' %}">Создать объявление</a></li>
+              </ul>
+            </nav>
+            <div class="responsive-navigation visible-sm visible-xs">
+              <a href="#nogo" class="menu-toggle-btn"><i class="fa fa-bars"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>

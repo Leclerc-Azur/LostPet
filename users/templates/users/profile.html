@@ -6,66 +6,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мой профиль</title>
     <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fontawesome/css/all.min.css' %}">
     <style>
+        body {
+            background: linear-gradient(135deg, #dde6f6 0%, #f5f6fa 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .profile-card {
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 1px 6px rgba(60,72,88,.08);
-            padding: 40px 24px;
-            margin: 48px auto;
-            max-width: 420px;
+            border-radius: 30px;
+            box-shadow: 0 12px 48px rgba(52,92,184,0.10), 0 1.5px 12px rgba(60,72,88,.13);
+            padding: 64px 48px 48px 48px;
+            margin: 60px auto;
+            max-width: 620px;
+            width: 100%;
             text-align: center;
+            position: relative;
+            transition: box-shadow .3s;
+        }
+        .profile-card:hover {
+            box-shadow: 0 18px 64px rgba(52,92,184,0.16), 0 2px 18px rgba(60,72,88,.15);
         }
         .profile-avatar {
-            width: 140px;
-            height: 140px;
+            width: 170px;
+            height: 170px;
             object-fit: cover;
-            border-radius: 100px;
-            border: 4px solid #f5f6fa;
-            margin-bottom: 12px;
+            border-radius: 50%;
+            border: 6px solid #f7fafd;
+            box-shadow: 0 6px 32px #6a8cff22;
+            margin-bottom: 18px;
         }
         .profile-title {
-            font-size: 1.4rem;
-            margin-top: 8px;
+            font-size: 2.1rem;
+            margin-top: 10px;
             font-weight: 700;
+            letter-spacing: 0.01em;
+            color: #1b2b59;
+        }
+        .profile-username {
+            color: #6a8cff;
+            font-size: 1.19rem;
+            margin-bottom: 3px;
+            font-weight: 500;
         }
         .profile-role {
-            font-size: 1rem;
-            background: #c0c0c0;
+            font-size: 1.05rem;
+            background: linear-gradient(90deg, #64e9b2, #6a8cff 90%);
             color: #fff;
-            border-radius: 12px;
-            padding: 3px 12px;
+            border-radius: 14px;
+            padding: 6px 18px 6px 18px;
             display: inline-block;
-            margin: 10px 0 12px 0;
+            margin: 18px 0 18px 0;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            box-shadow: 0 1.5px 8px #6a8cff11;
         }
         .profile-info {
             color: #495057;
-            font-size: 1rem;
-            margin: 3px 0;
-        }
-        .profile-btns {
-            margin-top: 18px;
-            display: flex;
-            justify-content: center;
-            gap: 16px;
+            font-size: 1.14rem;
+            margin: 6px 0;
+            line-height: 1.5;
         }
         .profile-label {
-            color: #666;
-            font-size: 0.97rem;
+            color: #8291b4;
+            font-size: 1.04rem;
+            font-weight: 500;
+            margin-right: 3px;
         }
         .profile-value {
-            font-weight: 500;
-            color: #222;
+            font-weight: 600;
+            color: #233869;
         }
         .profile-section {
-            background: #f9f9fa;
-            border-radius: 10px;
-            padding: 14px 20px 10px 20px;
-            margin: 18px 0 0 0;
+            background: #f7f8fb;
+            border-radius: 18px;
+            padding: 20px 32px 14px 32px;
+            margin: 30px 0 0 0;
+            text-align: left;
+            box-shadow: 0 2px 14px #6a8cff11;
+        }
+        .profile-section .profile-info {
+            font-size: 1.08rem;
+        }
+        .profile-btns {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .profile-btns .btn {
+            min-width: 150px;
+            font-size: 1.09rem;
+            font-weight: 600;
+            border-radius: 11px;
+            padding: 10px 0;
+            box-shadow: 0 1px 6px #6a8cff13;
+        }
+        .btn-outline-primary {
+            border: 2px solid #6a8cff !important;
+            color: #4e6ee5 !important;
+            background: #f7fafd !important;
+        }
+        .btn-outline-primary:hover {
+            background: linear-gradient(90deg, #64e9b2, #6a8cff 90%) !important;
+            color: #fff !important;
+            border-color: #6a8cff !important;
+        }
+        .btn-outline-secondary {
+            border: 2px solid #b5bac6 !important;
+            color: #6c788e !important;
+            background: #f9fafd !important;
+        }
+        .btn-outline-secondary:hover {
+            background: #6a8cff !important;
+            color: #fff !important;
+            border-color: #6a8cff !important;
+        }
+        @media (max-width: 900px) {
+            .profile-card { max-width: 97vw; padding: 28px 2vw 24px 2vw; }
+            .profile-section { padding: 16px 7vw 10px 7vw; }
+        }
+        @media (max-width: 540px) {
+            .profile-card { padding: 16vw 3vw 8vw 3vw; }
+            .profile-avatar { width: 33vw; height: 33vw; }
+            .profile-section { padding: 12px 2vw 7px 2vw; }
+            .profile-title { font-size: 1.3rem;}
+            .profile-btns { flex-direction: column; gap: 13px; }
         }
     </style>
 </head>
-<body style="background: #f5f6fa;">
+<body>
     <div class="container">
         <div class="profile-card">
             {% if user.avatar %}
@@ -75,33 +149,37 @@
             {% endif %}
 
             <div class="profile-title">{{ user.first_name }} {{ user.last_name }}</div>
-            <div class="profile-info" style="font-size: 1.1rem;">@{{ user.username }}</div>
-
+            <div class="profile-username">@{{ user.username }}</div>
             <div class="profile-info" style="margin-bottom: 2px;">
-                <span class="profile-label">Email:</span>
+                <span class="profile-label"><i class="fas fa-envelope"></i> Email:</span>
                 <span class="profile-value">{{ user.email }}</span>
             </div>
             {% if user.phone %}
             <div class="profile-info">
-                <span class="profile-label">Телефон:</span>
+                <span class="profile-label"><i class="fas fa-phone"></i> Телефон:</span>
                 <span class="profile-value">{{ user.phone }}</span>
             </div>
             {% endif %}
-
-            <div class="profile-role">{{ user.get_role_display }}</div>
+            <div class="profile-role"><i class="fas fa-user-shield"></i> {{ user.get_role_display }}</div>
 
             <div class="profile-section">
                 {% if user.birthday %}
-                <div class="profile-info"><span class="profile-label">Дата рождения:</span> {{ user.birthday|date:"d.m.Y" }}</div>
+                <div class="profile-info">
+                    <span class="profile-label"><i class="fas fa-birthday-cake"></i> Дата рождения:</span>
+                    <span class="profile-value">{{ user.birthday|date:"d.m.Y" }}</span>
+                </div>
                 {% endif %}
                 {% if user.gender %}
-                <div class="profile-info"><span class="profile-label">Пол:</span>
-                    {% if user.gender == 'male' %}Мужской{% elif user.gender == 'female' %}Женский{% else %}Другое{% endif %}
+                <div class="profile-info">
+                    <span class="profile-label"><i class="fas fa-venus-mars"></i> Пол:</span>
+                    <span class="profile-value">
+                        {% if user.gender == 'male' %}Мужской{% elif user.gender == 'female' %}Женский{% else %}Другое{% endif %}
+                    </span>
                 </div>
                 {% endif %}
                 {% if user.address or user.city or user.number or user.zip %}
                 <div class="profile-info">
-                    <span class="profile-label">Адрес:</span>
+                    <span class="profile-label"><i class="fas fa-map-marker-alt"></i> Адрес:</span>
                     <span class="profile-value">
                         {{ user.address }}
                         {% if user.number %}, {{ user.number }}{% endif %}
@@ -110,14 +188,20 @@
                     </span>
                 </div>
                 {% endif %}
-                <div class="profile-info"><span class="profile-label">Дата регистрации:</span> {{ user.created_date|date:"d.m.Y H:i" }}</div>
+                <div class="profile-info">
+                    <span class="profile-label"><i class="fas fa-calendar-check"></i> Дата регистрации:</span>
+                    <span class="profile-value">{{ user.created_date|date:"d.m.Y H:i" }}</span>
+                </div>
             </div>
 
             <div class="profile-btns">
-                <a href="{% url 'users:profile_settings' %}" class="btn btn-outline-primary btn-sm">Редактировать</a>
-                <a href="{% url 'users:password_change' %}" class="btn btn-outline-secondary btn-sm">Сменить пароль</a>
+                <a href="{% url 'users:profile_settings' %}" class="btn btn-outline-primary">Редактировать</a>
+                <a href="{% url 'users:password_change' %}" class="btn btn-outline-secondary">Сменить пароль</a>
             </div>
         </div>
     </div>
+    <!-- FontAwesome CDN, если не подключен через static -->
+    <!-- <script src="https://kit.fontawesome.com/0a0b0c0d0e.js" crossorigin="anonymous"></script> -->
 </body>
 </html>
+

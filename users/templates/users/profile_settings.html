@@ -6,69 +6,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Настройки профиля</title>
     <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fontawesome/css/all.min.css' %}">
     <style>
+        body {
+            background: linear-gradient(135deg, #dde6f6 0%, #f5f6fa 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+        }
         .profile-card {
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 1px 6px rgba(60,72,88,.08);
-            padding: 24px;
-            margin-bottom: 24px;
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(60,72,88,.10), 0 2px 8px rgba(60,72,88,.13);
+            padding: 44px 38px 34px 38px;
+            margin-bottom: 32px;
+            margin-top: 30px;
         }
         .profile-avatar {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             object-fit: cover;
-            border-radius: 100px;
-            border: 4px solid #f5f6fa;
+            border-radius: 50%;
+            border: 5px solid #f5f6fa;
+            box-shadow: 0 2px 12px #6a8cff13;
         }
         .profile-sidebar {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 18px;
         }
         .btn-custom {
-            min-width: 120px;
+            min-width: 140px;
+            font-size: 1.07rem;
+            font-weight: 600;
+            border-radius: 9px;
+            padding: 10px 0;
+            box-shadow: 0 1px 8px #6a8cff13;
         }
         .profile-info-title {
-            font-weight: 600;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+            color: #233869;
+            text-align: center;
+            letter-spacing: .01em;
+        }
+        .form-label, label {
+            color: #5069a3;
+            font-weight: 500;
+            font-size: 1.09rem;
+            margin-bottom: 6px;
+        }
+        .form-control {
+            border-radius: 11px;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafd;
+            transition: border .18s, box-shadow .18s;
+            font-size: 1.12rem;
+            min-height: 45px;
+            margin-bottom: 4px;
+        }
+        .form-control:focus {
+            border-color: #6a8cff;
+            box-shadow: 0 0 0 0.15rem #6a8cff33;
+        }
+        .profile-section {
             margin-bottom: 10px;
-            font-size: 1.1rem;
-            color: #495057;
         }
-        .input-label {
-            font-size: 0.95rem;
-            color: #6c757d;
-            margin-bottom: 2px;
+        .form-check-label {
+            color: #406079;
+            font-size: 1.01rem;
+            margin-left: 8px;
         }
-        .small-input {
-            width: 90px;
+        .alert-danger {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        @media (max-width: 991px) {
+            .profile-card { padding: 24px 7vw 18px 7vw; }
+        }
+        @media (max-width: 700px) {
+            .profile-card { padding: 8vw 2vw 6vw 2vw; }
+            .profile-avatar { width: 70vw; height: 70vw; }
         }
     </style>
 </head>
-<body style="background: #f5f6fa;">
+<body>
 <div class="container mt-4">
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-4">
+        <div class="col-md-4 mb-4">
             <div class="profile-card profile-sidebar text-center">
                 {% if user.avatar %}
-                    <img src="{{ user.avatar.url }}" class="profile-avatar mb-2" alt="Avatar">
+                    <img src="{{ user.avatar.url }}" class="profile-avatar mb-2" alt="Аватар">
                 {% else %}
-                    <img src="{% static 'assets/images/default_avatar.png' %}" class="profile-avatar mb-2" alt="Avatar">
+                    <img src="{% static 'assets/images/default_avatar.png' %}" class="profile-avatar mb-2" alt="Аватар">
                 {% endif %}
-                <h5>{{ user.username }}</h5>
-                <span class="text-muted">{{ user.email }}</span>
+                <h5 class="mt-3 mb-1">{{ user.username }}</h5>
+                <span class="text-muted" style="font-size: 1.01rem;">{{ user.email }}</span>
                 <div class="mt-2 mb-2">
-                    <span class="badge bg-secondary">{{ user.get_role_display }}</span>
+                    <span class="badge bg-secondary" style="font-size: 1.01rem;">{{ user.get_role_display }}</span>
                 </div>
                 <div class="d-grid gap-2">
-                    <a href="{% url 'users:profile' %}" class="btn btn-outline-primary btn-sm btn-custom">Мой профиль</a>
-                    <a href="{% url 'users:password_change' %}" class="btn btn-outline-secondary btn-sm btn-custom">Пароль</a>
+                    <a href="{% url 'users:profile' %}" class="btn btn-outline-primary btn-custom">Мой профиль</a>
+                    <a href="{% url 'users:password_change' %}" class="btn btn-outline-secondary btn-custom">Сменить пароль</a>
                 </div>
             </div>
         </div>
-        <!-- Main -->
+        <!-- Main Form -->
         <div class="col-md-8">
             <div class="profile-card mb-4">
                 <div class="profile-info-title mb-3">Редактировать профиль</div>
@@ -90,62 +136,69 @@
                     {% csrf_token %}
                     <div class="row mb-3">
                         <div class="col">
-                            {{ form.first_name.label_tag }} {{ form.first_name }} {{ form.first_name.errors }}
+                            <label for="{{ form.first_name.id_for_label }}">Имя</label>
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
                         </div>
                         <div class="col">
-                            {{ form.last_name.label_tag }} {{ form.last_name }} {{ form.last_name.errors }}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            {{ form.birthday.label_tag }} {{ form.birthday }} {{ form.birthday.errors }}
-                        </div>
-                        <div class="col">
-                            {{ form.gender.label_tag }} {{ form.gender }} {{ form.gender.errors }}
+                            <label for="{{ form.last_name.id_for_label }}">Фамилия</label>
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            {{ form.username.label_tag }} {{ form.username }} {{ form.username.errors }}
+                            <label for="{{ form.birthday.id_for_label }}">Дата рождения</label>
+                            {{ form.birthday }}
+                            {{ form.birthday.errors }}
                         </div>
                         <div class="col">
-                            {{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}
+                            <label for="{{ form.gender.id_for_label }}">Пол</label>
+                            {{ form.gender }}
+                            {{ form.gender.errors }}
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            {{ form.phone.label_tag }} {{ form.phone }} {{ form.phone.errors }}
+                            <label for="{{ form.username.id_for_label }}">Логин</label>
+                            {{ form.username }}
+                            {{ form.username.errors }}
                         </div>
                         <div class="col">
-                            {{ form.avatar.label_tag }} {{ form.avatar }} {{ form.avatar.errors }}
+                            <label for="{{ form.email.id_for_label }}">Почта</label>
+                            {{ form.email }}
+                            {{ form.email.errors }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="{{ form.phone.id_for_label }}">Телефон</label>
+                            {{ form.phone }}
+                            {{ form.phone.errors }}
+                        </div>
+                        <div class="col">
+                            <label for="{{ form.avatar.id_for_label }}">Аватар</label>
+                            {{ form.avatar }}
+                            {{ form.avatar.errors }}
                         </div>
                     </div>
                     <div class="profile-info-title mb-2">Адрес</div>
                     <div class="row mb-3">
-                        <div class="col-8">
-                            {{ form.address.label_tag }} {{ form.address }} {{ form.address.errors }}
-                        </div>
-                        <div class="col-4">
-                            {{ form.number.label_tag }} {{ form.number }} {{ form.number.errors }}
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            {{ form.city.label_tag }} {{ form.city }} {{ form.city.errors }}
-                        </div>
-                        <div class="col-6">
-                            {{ form.zip.label_tag }} {{ form.zip }} {{ form.zip.errors }}
+                        <div class="col-12">
+                            <label for="{{ form.address.id_for_label }}">Адрес полностью</label>
+                            {{ form.address }}
+                            {{ form.address.errors }}
                         </div>
                     </div>
-                        <div class="form-check mb-3">
-                             <input type="checkbox" class="form-check-input" id="id_is_2fa_enabled" name="is_2fa_enabled"
-                                  {% if user.is_2fa_enabled %}checked{% endif %}>
-                             <label class="form-check-label" for="id_is_2fa_enabled">
-                                 Включить двухфакторную аутентификацию (2FA) по email
-                             </label>
-                     </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="id_is_2fa_enabled" name="is_2fa_enabled"
+                            {% if user.is_2fa_enabled %}checked{% endif %}>
+                        <label class="form-check-label" for="id_is_2fa_enabled">
+                            Включить двухфакторную аутентификацию (2FA) по email
+                        </label>
+                    </div>
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-success">Сохранить</button>
+                        <button type="submit" class="btn btn-success btn-lg" style="min-width: 160px;">Сохранить</button>
                     </div>
                 </form>
             </div>

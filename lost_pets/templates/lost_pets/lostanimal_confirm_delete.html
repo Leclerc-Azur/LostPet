@@ -1,9 +1,100 @@
-{% extends 'base.html' %}
-{% block content %}
-  <h2>Удалить объявление "{{ object.title }}"?</h2>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">Подтвердить удаление</button>
-    <a href="{% url 'lost_pets:detail' object.pk %}">Отмена</a>
-  </form>
-{% endblock %}
+
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Удалить объявление</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #f6f6fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .delete-announcement-container {
+      max-width: 430px;
+      margin: 60px auto 0 auto;
+      background: #fff7f8;
+      padding: 36px 30px 30px 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 18px rgba(220,60,60,0.07);
+      text-align: center;
+    }
+    .delete-announcement-container h2 {
+      color: #c0392b;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 0.02em;
+    }
+    .delete-announcement-container p {
+      font-size: 1.1rem;
+      color: #3b2323;
+      margin-bottom: 36px;
+    }
+    .delete-announcement-container form {
+      margin-top: 0;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px #e74c3c22;
+    }
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+    .cancel-link {
+      display: inline-block;
+      margin-left: 18px;
+      font-size: 1rem;
+      color: #3498db;
+      text-decoration: none;
+      vertical-align: middle;
+      transition: color 0.2s;
+    }
+    .cancel-link:hover {
+      color: #217dbb;
+      text-decoration: underline;
+    }
+    @media (max-width: 480px) {
+      .delete-announcement-container {
+        max-width: 97vw;
+        padding: 22px 8px 20px 8px;
+      }
+      .delete-announcement-container h2 {
+        font-size: 1.2rem;
+      }
+      .delete-announcement-container p {
+        font-size: 1rem;
+      }
+      .delete-btn, .cancel-link {
+        font-size: 0.97rem;
+        padding: 10px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="delete-announcement-container">
+    <h2>Удалить объявление?</h2>
+    <p>
+      Вы уверены, что хотите удалить объявление о пропаже <strong>«{{ object.title }}»</strong>?
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="delete-btn">🗑 Подтвердить удаление</button>
+      <a href="{% url 'lost_pets:detail' object.pk %}" class="cancel-link">❌ Отмена</a>
+    </form>
+  </div>
+</body>
+</html>

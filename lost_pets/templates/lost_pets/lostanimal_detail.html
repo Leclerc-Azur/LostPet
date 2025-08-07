@@ -1,42 +1,181 @@
-{% extends "base.html" %}
+
 {% load static %}
 
-{% block content %}
-<div class="container" style="max-width:700px; margin: 40px auto;">
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="mb-3">{{ animal.title }}</h2>
-            
-            {% if animal.cover %}
-                <img src="{{ animal.cover.url }}" alt="Фото" class="img-fluid mb-3" style="max-height:300px; object-fit:contain;">
-            {% endif %}
-            
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><strong>Область:</strong> {{ animal.city }}</li>
-                <li class="list-group-item"><strong>Город:</strong> {{ animal.district }}</li>
-                <li class="list-group-item"><strong>Категория:</strong> {{ animal.category }}</li>
-                <li class="list-group-item"><strong>Телефон:</strong> {{ animal.phone }}</li>
-                <li class="list-group-item"><strong>Адрес/ориентир:</strong> {{ animal.address }}</li>
-                <li class="list-group-item"><strong>Дата пропажи:</strong> {{ animal.date_lost|date:"d.m.Y" }}</li>
-                <li class="list-group-item"><strong>Пол:</strong> 
-                    {% if animal.gender == 'male' %}Самец
-                    {% elif animal.gender == 'female' %}Самка
-                    {% else %}Неизвестно
-                    {% endif %}
-                </li>
-            </ul>
-            <div>
-                <h5>Описание:</h5>
-                <p>{{ animal.description }}</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ animal.title }}</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fontawesome/css/all.min.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #dde6f6 0%, #f5f6fa 100%);
+        }
+        .animal-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 10px 36px rgba(60,72,88,.13), 0 2px 10px rgba(60,72,88,.10);
+            max-width: 740px;
+            margin: 54px auto 30px auto;
+            padding: 42px 44px 38px 44px;
+        }
+        .animal-title {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #4067a1;
+            margin-bottom: 38px;
+            text-align: center;
+        }
+        .animal-imgbox {
+            background: #f7fafd;
+            border-radius: 18px;
+            margin: 0 auto 32px auto;
+            box-shadow: 0 2px 18px #6a8cff11;
+            padding: 16px;
+            max-width: 420px;
+        }
+        .animal-img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 16px;
+            box-shadow: 0 2px 18px #6a8cff19;
+        }
+        .list-group {
+            margin-bottom: 35px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px #6a8cff12;
+        }
+        .list-group-item {
+            font-size: 1.13rem;
+            padding: 20px 26px;
+            background: #f8fafd;
+            border: none;
+        }
+        .list-group-item:not(:last-child) {
+            border-bottom: 1px solid #e6ecf6;
+        }
+        .list-group-item strong {
+            color: #233869;
+            font-weight: 600;
+            min-width: 160px;
+            display: inline-block;
+        }
+        .animal-description-title {
+            font-size: 1.14rem;
+            color: #8b9dc7;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .animal-description-text {
+            font-size: 1.17rem;
+            color: #223366;
+            margin-bottom: 0;
+        }
+        .animal-btns {
+            display: flex;
+            gap: 18px;
+            margin-top: 22px;
+        }
+        .animal-btns .btn {
+            font-size: 1.11rem;
+            font-weight: 500;
+            min-width: 140px;
+            border-radius: 9px;
+            padding: 11px 0;
+        }
+        .animal-btns .btn-outline-warning {
+            border: 2px solid #ffc107 !important;
+            color: #ffb400 !important;
+            background: #fffbe6 !important;
+        }
+        .animal-btns .btn-outline-warning:hover {
+            background: #ffd34a !important;
+            color: #fff !important;
+            border-color: #ffc107 !important;
+        }
+        .animal-btns .btn-outline-danger {
+            border: 2px solid #e74c3c !important;
+            color: #e74c3c !important;
+            background: #fff7f7 !important;
+        }
+        .animal-btns .btn-outline-danger:hover {
+            background: #e74c3c !important;
+            color: #fff !important;
+        }
+        .back-btn {
+            min-width: 220px;
+            font-size: 1.13rem;
+            margin-top: 28px;
+            border-radius: 11px;
+        }
+        @media (max-width: 800px) {
+            .animal-card { padding: 7vw 3vw 7vw 3vw; }
+            .animal-title { font-size: 1.34rem; }
+            .list-group-item { font-size: 1.03rem; padding: 15px 4vw; }
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="max-width: 900px; margin: 0 auto;">
+    <div class="animal-card">
+        <div class="animal-title">{{ animal.title }}</div>
+        {% if animal.cover %}
+            <div class="animal-imgbox text-center">
+                <img src="{{ animal.cover.url }}" alt="Фото животного" class="animal-img">
             </div>
-            {% if request.user == animal.user or request.user.role == "manager" %}
-                <div class="mt-4">
-                    <a href="{% url 'lost_pets:lostanimal_edit' animal.pk %}" class="btn btn-warning mr-2">Редактировать</a>
-                    <a href="{% url 'lost_pets:lostanimal_delete' animal.pk %}" class="btn btn-danger">Удалить</a>
-                </div>
-            {% endif %}
+        {% endif %}
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong><i class="fas fa-map-marker-alt me-2 text-primary"></i>Область:</strong> {{ animal.city }}
+            </li>
+            <li class="list-group-item">
+                <strong><i class="fas fa-location-arrow me-2 text-primary"></i>Город / Район:</strong> {{ animal.district }}
+            </li>
+            <li class="list-group-item">
+                <strong><i class="fas fa-paw me-2 text-success"></i>Категория:</strong> {{ animal.category }}
+            </li>
+            <li class="list-group-item">
+                <strong><i class="fas fa-phone-alt me-2 text-info"></i>Телефон:</strong> {{ animal.phone }}
+            </li>
+            <li class="list-group-item">
+                <strong><i class="fas fa-map me-2 text-warning"></i>Адрес / ориентир:</strong> {{ animal.address }}
+            </li>
+            <li class="list-group-item">
+                <strong><i class="fas fa-calendar-alt me-2 text-muted"></i>Дата пропажи:</strong> {{ animal.date_lost|date:"d.m.Y" }}
+            </li>
+            <li class="list-group-item">
+                <strong><i class="fas fa-venus-mars me-2 text-pink"></i>Пол:</strong>
+                {% if animal.gender == 'male' %} Самец
+                {% elif animal.gender == 'female' %} Самка
+                {% else %} Неизвестно
+                {% endif %}
+            </li>
+        </ul>
+        <div class="mb-4">
+            <div class="animal-description-title">Описание</div>
+            <p class="animal-description-text">{{ animal.description }}</p>
         </div>
+        {% if request.user == animal.user or request.user.role == "manager" %}
+            <div class="animal-btns">
+                <a href="{% url 'lost_pets:lostanimal_edit' animal.pk %}" class="btn btn-outline-warning">
+                    <i class="fas fa-edit me-1"></i> Редактировать
+                </a>
+                <a href="{% url 'lost_pets:lostanimal_delete' animal.pk %}" class="btn btn-outline-danger">
+                    <i class="fas fa-trash-alt me-1"></i> Удалить
+                </a>
+            </div>
+        {% endif %}
     </div>
-    <a href="{% url 'lost_pets:index' %}" class="btn btn-secondary">Назад к объявлениям</a>
+    <div class="text-center">
+        <a href="{% url 'lost_pets:index' %}" class="btn btn-outline-secondary back-btn">
+            ← Назад к объявлениям
+        </a>
+    </div>
 </div>
-{% endblock %}
+</body>
+</html>
+
+

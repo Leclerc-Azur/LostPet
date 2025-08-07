@@ -1,166 +1,289 @@
 {% load static %}
-<!DOCTYPE html>
+
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Искать питомца</title>
-    <!-- Стили -->
+    <title>Поиск питомца</title>
+
     <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/misc.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/blue-scheme.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fontawesome/css/all.min.css' %}">
+    <style>
+      body {
+        background: linear-gradient(135deg, #dde6f6 0%, #f5f6fa 100%);
+      }
+      .search-container {
+        max-width: 1160px;
+        margin: 54px auto 40px auto;
+        padding: 0 18px;
+      }
+      .search-card {
+        background: #fff;
+        border-radius: 22px;
+        box-shadow: 0 8px 32px rgba(60,72,88,.13), 0 2px 8px rgba(60,72,88,.10);
+        padding: 38px 38px 28px 38px;
+        margin-bottom: 36px;
+      }
+      .search-card label {
+        color: #4067a1;
+        font-weight: 500;
+        margin-bottom: 7px;
+        font-size: 1.12rem;
+      }
+      .search-card .form-control {
+        border-radius: 11px;
+        font-size: 1.13rem;
+        min-height: 46px;
+        background: #f8fafd;
+        border: 1.6px solid #e2e8f0;
+        margin-bottom: 0;
+      }
+      .search-card .form-control:focus {
+        border-color: #6a8cff;
+        box-shadow: 0 0 0 0.15rem #6a8cff33;
+      }
+      .search-card .btn {
+        font-size: 1.13rem;
+        padding: 11px 38px;
+        border-radius: 12px;
+        min-width: 120px;
+      }
+      .search-card .btn-primary {
+        background: linear-gradient(90deg, #64e9b2, #6a8cff 90%);
+        border: none;
+        font-weight: 600;
+      }
+      .search-card .btn-primary:hover {
+        background: linear-gradient(90deg, #51dfab, #5075ec 90%);
+      }
+      .search-card .btn-outline-secondary {
+        border: 2px solid #b5bac6 !important;
+        color: #6c788e !important;
+        background: #f9fafd !important;
+      }
+      .search-card .btn-outline-secondary:hover {
+        background: #6a8cff !important;
+        color: #fff !important;
+        border-color: #6a8cff !important;
+      }
+      .search-title {
+        font-weight: 700;
+        color: #4067a1;
+        margin-bottom: 38px;
+        margin-top: 8px;
+        font-size: 2.1rem;
+        letter-spacing: .01em;
+        text-align: center;
+      }
+      .results-list .list-group-item {
+        background: #fff;
+        border-radius: 16px !important;
+        box-shadow: 0 2px 12px #6a8cff12;
+        margin-bottom: 16px;
+        border: none;
+        padding: 28px 32px;
+        transition: box-shadow .2s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .results-list .list-group-item:hover {
+        box-shadow: 0 6px 28px #6a8cff22;
+        background: #f7fafd;
+        text-decoration: none;
+      }
+      .results-list .animal-info h5 {
+        font-size: 1.26rem;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #223366;
+      }
+      .results-list .animal-info small {
+        color: #7a8aad;
+        font-size: 1.02rem;
+      }
+      .results-list img {
+        height: 74px;
+        width: 90px;
+        object-fit: cover;
+        border-radius: 11px;
+        box-shadow: 0 2px 8px #6a8cff22;
+        margin-left: 25px;
+      }
+      .pagination {
+        margin-top: 34px;
+      }
+      .pagination .page-item .page-link {
+        border-radius: 10px;
+        margin: 0 3px;
+        color: #4067a1;
+        font-size: 1.1rem;
+      }
+      .pagination .page-item.active .page-link {
+        background: linear-gradient(90deg, #64e9b2, #6a8cff 90%);
+        color: #fff;
+        border: none;
+      }
+      @media (max-width: 900px) {
+        .search-container { max-width: 98vw; }
+        .search-card { padding: 18px 3vw 18px 3vw; }
+        .results-list .list-group-item { flex-direction: column; align-items: flex-start; padding: 18px 8vw; }
+        .results-list img { margin-left: 0; margin-top: 15px; width: 96vw; max-width: 300px; }
+      }
+      @media (max-width: 600px) {
+        .search-card { padding: 3vw 2vw; }
+        .results-list .list-group-item { padding: 14px 3vw; }
+        .results-list img { width: 80vw; }
+        .search-title { font-size: 1.18rem; }
+      }
+    </style>
 </head>
 <body>
 
-    <!-- HEADER без Portfolio/Blog -->
-    <header class="site-header clearfix">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Логотип -->
-                    <div class="pull-left logo">
-                        <a href="{% url 'lost_pets:index' %}">
-                            <img src="{% static 'assets/images/logo.png' %}" alt="Logo">
-                        </a>
-                    </div>
-                    <!-- Навигация -->
-                    <div class="main-navigation pull-right">
-                        <nav class="main-nav visible-md visible-lg">
-                            <ul class="sf-menu">
-                                <li><a href="{% url 'lost_pets:index' %}">Главная</a></li>
-                                {% if user.is_authenticated %}
-                                    <li><a href="{% url 'users:logout' %}">Выйти</a></li>
-                                {% else %}
-                                    <li><a href="{% url 'users:login' %}">Войти</a></li>
-                                    <li><a href="{% url 'users:register' %}">Регистрация</a></li>
-                                {% endif %}
-                                <li class="active"><a href="{% url 'lost_pets:search' %}">Искать питомца</a></li>
-                                <li><a href="{% url 'lost_pets:create' %}">Создать объявление</a></li>
-                            </ul>
-                        </nav>
-                        <div class="responsive-navigation visible-sm visible-xs">
-                            <a href="#nogo" class="menu-toggle-btn"><i class="fa fa-bars"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- HEADER (оставлен без изменений) -->
+<header class="site-header clearfix">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-12 d-flex justify-content-between align-items-center">
+        <!-- Лого -->
+        <div class="logo">
+          <a href="{% url 'lost_pets:index' %}">
+            <img src="{% static 'assets/images/logo.png' %}" alt="Logo">
+          </a>
         </div>
-    </header>
+        <!-- Навигация -->
+        <nav class="main-nav d-none d-md-block">
+          <ul class="sf-menu">
+            <li><a href="{% url 'lost_pets:index' %}">Главная</a></li>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'users:logout' %}">Выйти</a></li>
+            {% else %}
+              <li><a href="{% url 'users:login' %}">Войти</a></li>
+              <li><a href="{% url 'users:register' %}">Регистрация</a></li>
+            {% endif %}
+            <li class="active"><a href="{% url 'lost_pets:search' %}">Поиск</a></li>
+            <li><a href="{% url 'lost_pets:create' %}">Новое объявление</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <!-- CONTENT: форма поиска и результаты -->
-    <div class="container" style="margin:40px auto; max-width:800px;">
-      <h2>Искать питомца</h2>
+<!-- MAIN -->
+<div class="search-container">
+  <div class="search-title">Поиск пропавших питомцев</div>
 
-      <form method="get" class="form-inline" style="margin-bottom:20px;">
-        <!-- Область -->
-        <div class="form-group">
-          <label for="id_area">Область:</label>
-          <select name="area" id="id_area" class="form-control" style="margin:0 10px;">
-            <option value="">— все области —</option>
-            {% for area in areas %}
-              <option value="{{ area.id }}" {% if area.id|stringformat:"s" == selected_area %}selected{% endif %}>
-                {{ area.title }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Город -->
-        <div class="form-group">
-          <label for="id_city">Город:</label>
-          <select name="city" id="id_city" class="form-control" style="margin:0 10px;">
-            <option value="">— все города —</option>
-            {% for c in cities %}
-              <option value="{{ c.id }}" {% if c.id|stringformat:"s" == selected_city %}selected{% endif %}>
-                {{ c.title }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Категория -->
-        <div class="form-group">
-          <label for="id_category">Категория:</label>
-          <select name="category" id="id_category" class="form-control" style="margin:0 10px;">
-            <option value="">— все категории —</option>
-            {% for cat in categories %}
-              <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == selected_category %}selected{% endif %}>
-                {{ cat.title }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="margin-right:10px;">Искать</button>
-        <a href="{% url 'lost_pets:search' %}" class="btn btn-default">Сбросить</a>
-      </form>
-
-      {% if animals %}
-        <div class="list-group">
-          {% for animal in animals %}
-            <a href="{% url 'lost_pets:detail' animal.id %}" class="list-group-item">
-              <h4 class="list-group-item-heading">{{ animal.title }}</h4>
-              <p class="list-group-item-text">
-                {{ animal.city.title }}, {{ animal.district.title }}
-              </p>
-            </a>
+  <!-- Форма поиска -->
+  <form method="get" class="search-card">
+    <div class="row g-4 align-items-end">
+      <div class="col-md-4 col-12">
+        <label for="id_area">Область:</label>
+        <select name="area" id="id_area" class="form-control">
+          <option value="">— все области —</option>
+          {% for area in areas %}
+            <option value="{{ area.id }}" {% if area.id|stringformat:"s" == selected_area %}selected{% endif %}>{{ area.title }}</option>
           {% endfor %}
+        </select>
+        <!-- Кнопки под областью -->
+        <div class="d-flex mt-4 gap-3">
+          <button type="submit" class="btn btn-primary me-2"><i class="fas fa-search me-1"></i> Искать</button>
+          <a href="{% url 'lost_pets:search' %}" class="btn btn-outline-secondary">Сбросить</a>
         </div>
+      </div>
 
-        {% if is_paginated %}
-          <nav aria-label="Page navigation">
-            <ul class="pagination">
-              {% if page_obj.has_previous %}
-                <li>
-                  <a href="?{% if selected_area %}area={{ selected_area }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-              {% endif %}
-              {% for num in page_obj.paginator.page_range %}
-                <li{% if page_obj.number == num %} class="active"{% endif %}>
-                  <a href="?{% if selected_area %}area={{ selected_area }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ num }}">{{ num }}</a>
-                </li>
-              {% endfor %}
-              {% if page_obj.has_next %}
-                <li>
-                  <a href="?{% if selected_area %}area={{ selected_area }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
-              {% endif %}
-            </ul>
-          </nav>
-        {% endif %}
-      {% else %}
-        <p>Объявления не найдены.</p>
-      {% endif %}
+      <div class="col-md-4 col-12">
+        <label for="id_city">Город:</label>
+        <select name="city" id="id_city" class="form-control">
+          <option value="">— все города —</option>
+          {% for c in cities %}
+            <option value="{{ c.id }}" {% if c.id|stringformat:"s" == selected_city %}selected{% endif %}>{{ c.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4 col-12">
+        <label for="id_category">Категория животного:</label>
+        <select name="category" id="id_category" class="form-control">
+          <option value="">— все животные —</option>
+          {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == selected_category %}selected{% endif %}>{{ cat.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <!-- Вывод результатов -->
+  {% if animals %}
+    <div class="results-list list-group mb-5">
+      {% for animal in animals %}
+        <a href="{% url 'lost_pets:detail' animal.id %}" class="list-group-item list-group-item-action">
+          <div class="animal-info">
+            <h5 class="mb-1"><i class="fas fa-paw text-primary me-2"></i>{{ animal.title }}</h5>
+            <small class="text-muted">{{ animal.city.title }}, {{ animal.district.title }}</small>
+          </div>
+          {% if animal.cover %}
+            <img src="{{ animal.cover.url }}" alt="Фото" loading="lazy">
+          {% endif %}
+        </a>
+      {% endfor %}
     </div>
 
-    <!-- Пустой FOOTER без текста и фона -->
-    <footer class="site-footer" style="background: none; box-shadow: none;">
-      <div class="container text-center" style="padding:20px 0;"></div>
-    </footer>
+    <!-- Пагинация -->
+    {% if is_paginated %}
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?{% if selected_area %}area={{ selected_area }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous">&laquo;</a>
+            </li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+              <a class="page-link" href="?{% if selected_area %}area={{ selected_area }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?{% if selected_area %}area={{ selected_area }}&{% endif %}{% if selected_city %}city={{ selected_city }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next">&raquo;</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <p class="text-center text-muted" style="font-size:1.17rem; margin-top:36px;">😿 Объявления не найдены. Попробуйте изменить параметры поиска.</p>
+  {% endif %}
+</div>
 
-    <!-- Скрипты -->
-    <script src="{% static 'assets/js/jquery-1.10.2.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery-migrate-1.2.1.min.js' %}"></script>
-    <script src="{% static 'assets/js/min/plugins.min.js' %}"></script>
-    <script src="{% static 'assets/js/min/medigo-custom.min.js' %}"></script>
-    <!-- AJAX подгрузка городов -->
-    <script>
-      document.getElementById('id_area').addEventListener('change', function() {
-        const areaId = this.value;
-        const citySelect = document.getElementById('id_city');
-        citySelect.innerHTML = '<option>Загрузка...</option>';
-        fetch("{% url 'lost_pets:ajax_load_cities' %}?area_id=" + areaId)
-          .then(r => r.json())
-          .then(data => {
-            let opts = '<option value="">— все города —</option>';
-            data.cities.forEach(c => opts += `<option value="${c.id}">${c.name}</option>`);
-            citySelect.innerHTML = opts;
-          });
+<!-- FOOTER -->
+<footer class="site-footer" style="background: none; box-shadow: none;">
+  <div class="container text-center" style="padding:20px 0;"></div>
+</footer>
+
+<!-- JS -->
+<script src="{% static 'assets/js/jquery-1.10.2.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery-migrate-1.2.1.min.js' %}"></script>
+<script src="{% static 'assets/js/min/plugins.min.js' %}"></script>
+<script src="{% static 'assets/js/min/medigo-custom.min.js' %}"></script>
+
+<script>
+  document.getElementById('id_area').addEventListener('change', function () {
+    const areaId = this.value;
+    const citySelect = document.getElementById('id_city');
+    citySelect.innerHTML = '<option>Загрузка...</option>';
+    fetch("{% url 'lost_pets:ajax_load_cities' %}?area_id=" + areaId)
+      .then(r => r.json())
+      .then(data => {
+        let opts = '<option value="">— все города —</option>';
+        data.cities.forEach(c => opts += `<option value="${c.id}">${c.name}</option>`);
+        citySelect.innerHTML = opts;
       });
-    </script>
+  });
+</script>
+
 </body>
 </html>
